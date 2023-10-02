@@ -1,0 +1,3 @@
+{{ if eq .chezmoi.os "windows" }}
+.zshrc  #ignore .zshrc if the OS is Windows
+{{ end }}
