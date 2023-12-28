@@ -1,0 +1,8 @@
+import = ["~/.config/alacritty/catppuccin-frappe.toml"]
+
+[font]
+size = 12.0
+
+[font.normal]
+family = "CaskaydiaCove NFM"
+style = "Regular"
