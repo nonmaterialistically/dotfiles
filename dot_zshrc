@@ -1,17 +1,16 @@
-#ZINIT_HOME="${XDG_DATA_HOME:-${HOME}/.local/share}/zinit/zinit.git"
-#[ ! -d $ZINIT_HOME ] && mkdir -p "$(dirname $ZINIT_HOME)"
-#[ ! -d $ZINIT_HOME/.git ] && git clone https://github.com/zdharma-continuum/zinit.git "$ZINIT_HOME"
-#source "${ZINIT_HOME}/zinit.zsh"
-
-# Check if homebrew is used (on linux)
-if [[ $(uname -s) == "Linux" && -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
-    eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
-fi
-
-# Check if homebrew is used (on MacOS)
-if [[ $(uname -s) == "Darwin" && -f "/opt/homebrew/bin/brew" ]]; then
-  eval "$(/opt/homebrew/bin/brew shellenv)"
-fi
+# Check if homebrew is used on Linux or MacOS. Set shellenvs if yes
+case $(uname -s) in
+    Linux)
+        if [[ -x "/home/linuxbrew/.linuxbrew/bin/brew" ]]; then
+            eval "$(/home/linuxbrew/.linuxbrew/bin/brew shellenv)"
+        fi
+        ;;
+    Darwin)
+        if [[ -f "/opt/homebrew/bin/brew" ]]; then
+            eval "$(/opt/homebrew/bin/brew shellenv)"
+        fi
+        ;;
+esac
 
 # Set language environment
 export LANG=en_US.UTF-8
@@ -26,26 +25,57 @@ else
 fi
 
 # Load completions
-autoload -Uz compinit && compinit
+autoload -Uz compinit
+compinit -d ~/.cache/zcompdump
+
+autoload -U +X bashcompinit
+bashcompinit
+
+# Set completion settings
+setopt auto_menu            # show completion menu on successive tab press
+setopt complete_in_word     # complete to the middle of words if whole word completion is not available
+setopt always_to_end        # move to the end of the command when completing in the middle of it
 
 # Keybindings
 bindkey -e
 
+# History settings
+HISTSIZE=5000
+HISTFILE=~/.zsh_history
+SAVEHIST=$HISTSIZE
+HISTDUP=erase
+setopt appendhistory
+setopt sharehistory
+setopt hist_ignore_space
+setopt hist_ignore_all_dups
+setopt hist_save_no_dups
+setopt hist_ignore_dups
+setopt hist_find_no_dups
+
+# Directory settings
+setopt auto_cd
+
 # Aliases
 alias vim="nvim"
-#if which "eza" >/dev/null 2>&1 ; then
-#    alias ls="eza -F --group-directories-first"
-#    alias la="ls -A"
-#else
-#    alias ls="ls -vF --color=auto"
-#    alias la="ls -AC"
-#fi
-alias ll="ls -lah"
+alias cat=bat
+alias lsa="eza --long --all --sort=modified --icons"
 
 # Set up fzf key bindings and fuzzy completion
-source <(fzf --zsh)
+if which "fzf" >/dev/null 2>&1; then
+    source <(fzf --zsh)
+fi
 
 # Set up zoxide
-eval "$(zoxide init zsh)"
+if which "zoxide" >/dev/null 2>&1; then
+    eval "$(zoxide init zsh)"
+fi
 
-eval "$(starship init zsh)"
+# Set up starship prompt if it is installed
+if which "starship" >/dev/null 2>&1; then
+    eval "$(starship init zsh)"
+fi
+
+## display The Thing of Funny™ on shell spawn
+if which "pfetch" >/dev/null 2>&1; then
+    pfetch
+fi
