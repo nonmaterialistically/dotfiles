@@ -13,19 +13,30 @@ palette = "catppuccin_frappe"
 # You can also replace your username with a neat symbol like   or disable this
 # and use the os module below
 [username]
-show_always = false
-disabled = false
+style_user = 'blue bold dimmed'
+style_root = 'red bold'
+format = '[$user]($style)@'
+show_always = true
 
-# An alternative to the username module which displays a symbol that
-# represents the current operating system
 [os]
-disabled = false # Disabled by default
+disabled = false
 
 [directory]
 truncation_symbol = "…/"
+style = 'bold cyan dimmed'
 
 [hostname]
+ssh_only = false
 ssh_symbol=' '
+style = 'blue bold dimmed'
+format = '[$ssh_symbol$hostname]($style) '
+
+[container]
+symbol='📦'
+format='[$symbol](bold blue dimmed) '
+
+[shell]
+disabled = false
 
 [time]
 disabled = false
