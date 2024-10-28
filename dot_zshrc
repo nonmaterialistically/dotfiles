@@ -58,7 +58,11 @@ setopt auto_cd
 # Aliases
 alias vim="nvim"
 alias cat=bat
-alias lsa="eza --long --all --sort=modified --icons"
+
+# If eza is present, set ls aliases
+if which "eza" >/dev/null 2>&1; then
+    alias lsa="eza --long --all --sort=modified --icons"
+fi
 
 # Set up fzf key bindings and fuzzy completion
 if which "fzf" >/dev/null 2>&1; then
